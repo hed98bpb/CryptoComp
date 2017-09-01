@@ -1,17 +1,17 @@
 public enum Bloodtype {
-    ZERONEGATIVE("0-", 0),
-    ZEROPOSITIVE("0+", 0),
-    ANEGATIVE("A-", 0),
-    APOSITIVE("A+", 0),
-    BNEGATIVE("B-", 0),
-    BPOSITIVE("B+", 0),
-    ABNEGATIVE("AB-", 0),
-    ABPOSITIVE("AB+", 0);
+    ZERONEGATIVE("0-", "111"), // 111
+    ZEROPOSITIVE("0+", "110"), // 110
+    ANEGATIVE("A-", "101"),    // 101
+    APOSITIVE("A+", "100"),    // 100
+    BNEGATIVE("B-", "011"),    // 011
+    BPOSITIVE("B+", "010"),    // 010
+    ABNEGATIVE("AB-", "001"),  // 001
+    ABPOSITIVE("AB+", "000");  // 000
 
     public String name;
-    public int encoding;
+    public String encoding;
 
-    Bloodtype(String name, int encoding){
+    Bloodtype(String name, String encoding){
         this.name = name;
         this.encoding = encoding;
     }

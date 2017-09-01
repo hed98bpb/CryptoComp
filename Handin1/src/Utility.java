@@ -9,9 +9,17 @@ public class Utility {
         return listCompatibility(donor).contains(recipient);
     }
 
-    public boolean booleanFormula(int type1, int type2){
-        return true;
+    public boolean booleanFormula(Bloodtype donor, Bloodtype recipient){
+        LayoutConfig lc = new LayoutConfig(donor, recipient);
+        return booleanCircuit(lc);
     }
+
+    private boolean booleanCircuit(LayoutConfig lc) {
+        return ORgate(ANDgate(lc.abar,lc.bbar,lc.cbar), ANDgate(lc.abar,lc.bbar,lc.f), ANDgate(lc.abar,lc.cbar,lc.e),
+                      ANDgate(lc.abar,lc.e,lc.f), ANDgate(lc.bbar,lc.d,lc.f), ANDgate(lc.cbar,lc.d,lc.e),
+                      ANDgate(lc.d,lc.e,lc.f));
+    }
+
 
     public Testpair InputToBloodtypeEnums(String arg0, String arg1){
         return new Testpair(convertToBloodtype(arg0), convertToBloodtype(arg1));
@@ -39,7 +47,19 @@ public class Utility {
         return Arrays.asList(Bloodtype.ABPOSITIVE);
     }
 
+    public static boolean ORgate(boolean... xs){
+        boolean result = false;
+        for (boolean x : xs) {
+            result = result || x;
+        }
+        return result;
+    }
+    public static boolean ANDgate(boolean x, boolean y, boolean z){
+        return (x && y && z);
+    }
+
 }
+
 
 final class Testpair {
     private final Bloodtype donor;

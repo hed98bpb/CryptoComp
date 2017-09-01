@@ -12,7 +12,7 @@ public class Main {
         Testpair testpair = util.InputToBloodtypeEnums(args[0], args[1]);
 
         if (args[2].equals("0")) results = util.tableLookup(testpair.getDonor(), testpair.getRecipient());
-        if (args[2].equals("0")) results = util.tableLookup(testpair.getDonor(), testpair.getRecipient());
+        if (args[2].equals("1")) results = util.booleanFormula(testpair.getDonor(), testpair.getRecipient());
 
         System.out.print(results.toString());
     }
