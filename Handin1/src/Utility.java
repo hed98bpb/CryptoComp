@@ -15,9 +15,18 @@ public class Utility {
     }
 
     private boolean booleanCircuit(LayoutConfig lc) {
-        return ORgate(ANDgate(lc.abar,lc.bbar,lc.cbar), ANDgate(lc.abar,lc.bbar,lc.f), ANDgate(lc.abar,lc.cbar,lc.e),
+
+        return ANDgate(ORgate(lc.cbar,lc.f),ORgate(lc.bbar,lc.e),ORgate(lc.abar,lc.d));
+
+       /* Alternative as SOP
+       return ORgate(ANDgate(lc.abar,lc.bbar,lc.cbar), ANDgate(lc.abar,lc.bbar,lc.f), ANDgate(lc.abar,lc.cbar,lc.e),
                       ANDgate(lc.abar,lc.e,lc.f), ANDgate(lc.bbar,lc.cbar,lc.d), ANDgate(lc.bbar,lc.d,lc.f),
                       ANDgate(lc.cbar,lc.d,lc.e), ANDgate(lc.d,lc.e,lc.f));
+
+       // Sanity check with POS combined with the negated kmap
+        return ANDgate(ANDgate(ORgate(lc.cbar,lc.f),ORgate(lc.bbar,lc.e),ORgate(lc.abar,lc.d)),
+                      !ORgate(ANDgate(lc.c,lc.fbar,true),ANDgate(lc.b,lc.ebar,true), ANDgate(lc.a,lc.dbar,true)),true);
+        */
     }
 
 
