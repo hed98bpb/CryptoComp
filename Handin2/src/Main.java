@@ -15,7 +15,7 @@ public class Main {
         Testpair testpair = util.InputToBloodtypeEnums(args[0], args[1]);
 
         //init
-        int f[][] = new int[8][8];
+        boolean f[][] = new boolean[8][8];
         String s = new String(); //string for debug printing of table
 
         //Generate truth table and store ugly debug string for later printing
@@ -23,9 +23,9 @@ public class Main {
             for (int k = 0; k < 8; k++) {
                 boolean b = util.booleanFormula(Bloodtype.values()[i], Bloodtype.values()[k]);
                 if (b){
-                    f[i][k] = 1;
+                    f[i][k] = true;
                 } else
-                    f[i][k] = 0;
+                    f[i][k] = false;
                 if(i==0){
                     s+=Bloodtype.values()[7-k]+ " ";
                     if(k==7){
@@ -52,8 +52,12 @@ public class Main {
             }
         }
 
+        //make Dealer
+        Dealer d = new Dealer(f, 3);
+
+
         //System.out.println(Arrays.deepToString(f).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
-        System.out.print(s);
+        //System.out.print(s);
 
         if (args[2].equals("0")) results = util.tableLookup(testpair.getDonor(), testpair.getRecipient());
         if (args[2].equals("1")) results = util.booleanFormula(testpair.getDonor(), testpair.getRecipient());
