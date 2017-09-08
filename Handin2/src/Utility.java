@@ -18,15 +18,6 @@ public class Utility {
 
         return ANDgate(ORgate(lc.cbar,lc.f),ORgate(lc.bbar,lc.e),ORgate(lc.abar,lc.d));
 
-       /* Alternative as SOP
-       return ORgate(ANDgate(lc.abar,lc.bbar,lc.cbar), ANDgate(lc.abar,lc.bbar,lc.f), ANDgate(lc.abar,lc.cbar,lc.e),
-                      ANDgate(lc.abar,lc.e,lc.f), ANDgate(lc.bbar,lc.cbar,lc.d), ANDgate(lc.bbar,lc.d,lc.f),
-                      ANDgate(lc.cbar,lc.d,lc.e), ANDgate(lc.d,lc.e,lc.f));
-
-       // Sanity check with POS combined with the negated kmap
-        return ANDgate(ANDgate(ORgate(lc.cbar,lc.f),ORgate(lc.bbar,lc.e),ORgate(lc.abar,lc.d)),
-                      !ORgate(ANDgate(lc.c,lc.fbar,true),ANDgate(lc.b,lc.ebar,true), ANDgate(lc.a,lc.dbar,true)),true);
-        */
     }
 
 
@@ -63,18 +54,14 @@ public class Utility {
         }
         return result;
     }
-    public static boolean ANDgate(boolean x, boolean y, boolean z){
-        return (x && y && z);
-    }
 
-    public static int XORgateforint(int x, int y){
-        if(x==y){
-            return 0;
-        } else {
-            return 1;
+    public static boolean ANDgate(boolean... xs){
+        boolean result = true;
+        for (boolean x : xs) {
+            result = result && x;
         }
+        return result;
     }
-
 }
 
 
