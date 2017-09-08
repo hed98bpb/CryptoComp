@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -24,8 +25,8 @@ public class Dealer {
         }
 
         // Step 1
-        r = new Random(98765679304829L).nextInt(arraySize);
-        s = new Random(55465465498849L).nextInt(arraySize);
+        r = new Random(System.currentTimeMillis()+42).nextInt(arraySize);
+        s = new Random(System.currentTimeMillis()+1337).nextInt(arraySize);
 
         Ma = new boolean[arraySize][arraySize];
         Mb = new boolean[arraySize][arraySize];
@@ -36,9 +37,10 @@ public class Dealer {
         // Step 3
         fillTableMA(T, arraySize);
 
-        System.out.println(Arrays.deepToString(Mb).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
-        System.out.println(" ");
-        System.out.println(Arrays.deepToString(Ma).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
+        // Debug prints
+        //System.out.println(Arrays.deepToString(Mb).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
+        //System.out.println(" ");
+        //System.out.println(Arrays.deepToString(Ma).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
     }
 
     private void fillTableMA(boolean[][] T, int arraySize) {
@@ -54,11 +56,11 @@ public class Dealer {
     }
 
     private void fillTableMB() {
-        Random rand  = new Random(3426834987349258L);
+        Random rand  = new Random(System.currentTimeMillis()+666);
         for (int i = 0; i < Mb.length; i++) {
-            for (int k = 0; k < Mb[i].length; k++) {
-                if (rand.nextInt(2) % 2 == 0) Mb[i][k] = false;
-                else Mb[i][k] = true;
+            for (int j = 0; j < Mb[i].length; j++) {
+                if (rand.nextInt(2) % 2 == 0) Mb[i][j] = false;
+                else Mb[i][j] = true;
             }
         }
     }

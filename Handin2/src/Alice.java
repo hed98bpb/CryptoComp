@@ -24,5 +24,4 @@ public class Alice {
         return z = MA[u][v] ^zb;
     }
 
-
 }

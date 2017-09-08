@@ -5,7 +5,7 @@ public class Main {
     // y = recipient bloodtype
     // z = function which is {0,1}
     // with 0 being tablelookup and 1
-    // if only two args are given the OTTT protocol is runned !!!!
+    // if only two args are given the OTTT protocol is executed !!!!
 
     public static void main(String[] args) {
         Boolean result = null;
@@ -17,38 +17,42 @@ public class Main {
             if (args[2].equals("1")) result = util.booleanFormula(testpair.getDonor(), testpair.getRecipient());
         } else {
             // setup
-            boolean f[][] = new boolean[8][8];
-            String s = new String(); //string for debug printing of table
-            makeTable(util, f, s);
+            boolean T[][] = new boolean[8][8];
+            String s = ""; //string for debug printing of table
+            makeTable(util, T, s);
 
             // make Dealer, Alice and Bob
-            Dealer d = new Dealer(f, 3);
+            Dealer d = new Dealer(T, 3);
+            // (Step 4 of the dealer is simulated by inputting the values as below)
             Alice alice = new Alice(d.Ma, d.r, d.n, testpair.getRecipient());
-            Bob bob = new Bob(d.Mb, d.r, d.n, testpair.getDonor());
+            Bob bob = new Bob(d.Mb, d.s, d.n, testpair.getDonor());
 
             // Run protocol
             result = runProtocol(alice, bob);
 
         }
-        //System.out.println(Arrays.deepToString(f).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
-        //System.out.print(s);
 
-        System.out.println("\nMatch? " + result.toString());
+        //System.out.println(Arrays.deepToString(f).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
+
+        System.out.println("\nMatch? = " + result.toString());
     }
 
-    private static Boolean runProtocol(Alice alice, Bob bob) {
+    public static Boolean runProtocol(Alice alice, Bob bob) {
         Boolean result;
         alice.calculateValue();
+        // Alice sends u to Bob
         bob.u = alice.u;
         bob.calculateValue();
+        // Bob sends v, zb to Alice
         alice.v = bob.v;
         alice.zb = bob.zb;
+        // Alice computes the output
         result = alice.calculateOutput();
         return result;
     }
 
-    private static void makeTable(Utility util, boolean[][] f, String s) {
-        //Generate truth table and store ugly debug string for later printing
+    public static void makeTable(Utility util, boolean[][] f, String s) {
+        //Generate truth table T and store ugly debug string for later printing
         for (int i = 0; i < 8; i ++) {
             for (int k = 0; k < 8; k++) {
                 boolean b = util.booleanFormula(Bloodtype.values()[i], Bloodtype.values()[k]);
