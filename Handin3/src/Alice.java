@@ -1,27 +1,30 @@
+import java.security.SecureRandom;
+
 /**
  * Created by Root on 08-09-2017.
  */
 public class Alice {
 
-    private boolean[][] MA;
-    private Bloodtype bloodtype;
-    private int r, n;
-    public int u, v;
-    public boolean z, zb;
+    public int[] x;
+    private Bloodtype b;
+    public SecureRandom rand = new SecureRandom(new byte[20]);
 
-    public Alice(boolean[][] MA, int r, int n, Bloodtype bloodtype){
-        this.bloodtype = bloodtype;
-        this.MA = MA;
-        this.r = r;
-        this.n = n;
+
+    public Alice(int[] wires, Bloodtype bloodtype){
+        b = bloodtype;
+        x = wires;
+
+        int x0b = getRand();
+        x[0] = new Integer(b.encoding.substring(1,1)) ^ x0b;
+        int x1b = getRand();
+        x[1] = new Integer(b.encoding.substring(2,2)) ^ x1b;
+        int x2b = getRand();
+        x[2] = new Integer(b.encoding.substring(3,3)) ^ x2b;
     }
 
-    public void calculateValue(){
-        u = Math.floorMod(bloodtype.encodingToInt() + r, (int) Math.pow(2, n));
-    }
 
-    public boolean calculateOutput(){
-        return z = MA[u][v] ^zb;
+    public int getRand() {
+        return rand.nextInt(2);
     }
 
 }

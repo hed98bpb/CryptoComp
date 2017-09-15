@@ -1,24 +1,30 @@
+import java.security.SecureRandom;
+
 /**
  * Created by Root on 08-09-2017.
  */
 public class Bob {
 
-    private boolean[][] MB;
-    private int s, n;
-    private Bloodtype bloodtype;
-    public int u, v;
-    public boolean zb;
+    public int[] y;
+    private Bloodtype b;
+    public SecureRandom rand = new SecureRandom(new byte[20]);
 
-    public Bob(boolean[][] MB, int s, int n, Bloodtype bloodtype){
-        this.bloodtype = bloodtype;
-        this.MB = MB;
-        this.s = s;
-        this.n = n;
+
+    public Bob(int[] wires, Bloodtype bloodtype){
+        b = bloodtype;
+        y = wires;
+
+        int x0b = getRand();
+        y[3] = new Integer(b.encoding.substring(1,1)) ^ x0b;
+        int x1b = getRand();
+        y[4] = new Integer(b.encoding.substring(2,2)) ^ x1b;
+        int x2b = getRand();
+        y[5] = new Integer(b.encoding.substring(3,3)) ^ x2b;
     }
 
-    public void calculateValue(){
-        v = Math.floorMod(bloodtype.encodingToInt() + s, (int) Math.pow(2, n));
-        zb = MB[u][v];
+
+    public int getRand() {
+        return rand.nextInt(2);
     }
 
 }
