@@ -6,26 +6,13 @@ import static org.junit.Assert.*;
 /**
  * Created by Root on 03-09-2017.
  */
+
 public class Bloodtypetest {
 
     private Utility util = new Utility();
-    private Dealer d;
-
-    @Before
-    public void SetUp(){
-        // setup
-        boolean f[][] = new boolean[8][8];
-        String s = ""; //string for debug printing of table
-        Main.makeTable(util, f, s);
-
-        // make Dealer
-        this.d = new Dealer(f, 3);
-    }
 
     private boolean test(Bloodtype donor, Bloodtype recipient){
-        Alice alice = new Alice(d.Ma, d.r, d.n, recipient);
-        Bob bob = new Bob(d.Mb, d.s, d.n, donor);
-        return Main.runProtocol(alice, bob);
+        return util.runProtocol(donor, recipient);
     }
 
     @Test

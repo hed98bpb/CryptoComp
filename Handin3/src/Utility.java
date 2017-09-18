@@ -20,7 +20,6 @@ public class Utility {
 
     }
 
-
     public Testpair InputToBloodtypeEnums(String arg0, String arg1){
         return new Testpair(convertToBloodtype(arg0), convertToBloodtype(arg1));
     }
@@ -61,6 +60,110 @@ public class Utility {
             result = result && x;
         }
         return result;
+    }
+
+    /*
+        the layer/wire structure follows a simple rule. A gate in layer n with
+        output wire k, takes what's in layer n-1 at wires k and k+1. If unary a
+        gate in layer n with output wire k, takes what's in layer n-1 at wire k.
+
+        the circuit is drawn and implemented in layers. A picture of the circuit
+        can be found in the folder.
+    */
+
+    public static Boolean runProtocol(Alice alice, Bob bob) {
+
+        Dealer dealer = new Dealer();
+        int layer = 0;
+
+        // Layer 0
+        initializeInputWires(alice, bob);
+
+        // Layer 1
+        layer++;
+        for (int i = 0; i < 6; i += 2) {
+            alice.not(layer, i);
+            bob.not(layer, i);
+        }
+        for (int i = 1; i < 6; i += 2) {
+            alice.identity(layer, i);
+            bob.identity(layer,i);
+        }
+
+        // Layer 2
+        layer++;
+        for (int i = 0; i < 6; i += 2){
+            and(alice, bob, dealer, layer, i);
+        }
+        removeSpaceInLayer2(alice, bob, layer);
+
+        // Layer 3
+        layer++;
+        for (int i = 0; i < 3; i++) {
+            alice.not(layer, i);
+            bob.not(layer, i);
+        }
+
+        // Layer 4
+        layer++;
+        and(alice, bob, dealer, layer, 0);
+        alice.identity(layer, 3, 2);
+        bob.identity(layer, 3, 2);
+
+        // Layer 5
+        layer++;
+        and(alice, bob, dealer, layer, 0);
+
+        // output
+        alice.calculateOutput(bob.sendOutput());
+
+        if (alice.hasOutput()) return alice.output;
+        else throw new Error("No output was computed");
+    }
+
+    private static void removeSpaceInLayer2(Alice alice, Bob bob, int layer) {
+        alice.identity(layer, 2, 1);
+        bob.identity(layer, 2, 1);
+        alice.identity(layer, 4, 2);
+        bob.identity(layer, 4, 2);
+    }
+
+
+    private static void and(Alice alice, Bob bob, Dealer dealer, int layer, int wire) {
+
+        boolean[] sixtuplet;
+        sixtuplet = dealer.generateuvwSixtuplet();
+
+        alice.setTriple(sixtuplet[0], sixtuplet[2], sixtuplet[4]);
+        bob.setTriple(sixtuplet[1], sixtuplet[3], sixtuplet[5]);
+
+        alice.calculateDAndEShares(layer, wire);
+        bob.calculateDAndEShares(layer, wire);
+
+        alice.setDAndESharesFromBob(bob.sendDAndEShares());
+        bob.setDAndESharesFromAlice(alice.sendDAndEShares());
+
+        alice.calculateDAndEValues();
+        bob.calculateDAndEValues();
+
+        alice.calculateZValue(layer, wire);
+        bob.calculateZValue(layer, wire);
+    }
+
+    public static void initializeInputWires(Alice alice, Bob bob){
+
+        alice.initializeInputWires();
+        bob.initializeInputWires();
+
+        alice.setInputWiresFromBob(bob.sendSharesForInputWires());
+        bob.setInputWiresfromAlice(alice.sendSharesForInputWires());
+
+    }
+
+    public Boolean runProtocol(Bloodtype doner, Bloodtype recipoient) {
+        Alice alice = new Alice(6, 6, doner);
+        Bob bob = new Bob(6, 6, recipoient);
+        return runProtocol(alice, bob);
     }
 }
 
