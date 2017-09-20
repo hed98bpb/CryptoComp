@@ -76,7 +76,7 @@ public class Bob {
 
     public void calculateDAndEShares(int layer, int wire) {
         db = circuitValues[--layer][wire] ^ ub;
-        eb = circuitValues[--layer][wire++] ^ vb;
+        eb = circuitValues[--layer][++wire] ^ vb;
     }
 
     public boolean[] sendDAndEShares() {
@@ -98,6 +98,6 @@ public class Bob {
     }
 
     public void calculateZValue(int layer, int wire) {
-        circuitValues[layer][wire] = wb ^ (e && circuitValues[--layer][wire]) ^ (d && circuitValues[--layer][++wire]) ^ (e && d);
+        circuitValues[layer][wire] = wb ^ (e & circuitValues[--layer][wire]) ^ (d & circuitValues[--layer][++wire]) ^ (e & d);
     }
 }

@@ -82,7 +82,7 @@ public class Alice {
 
     public void calculateDAndEShares(int layer, int wire) {
         da = circuitValues[--layer][wire] ^ ua;
-        ea = circuitValues[--layer][wire++] ^ va;
+        ea = circuitValues[--layer][++wire] ^ va;
     }
 
     public void setDAndESharesFromBob(boolean[] bobsDAndE) {
@@ -100,7 +100,7 @@ public class Alice {
     }
 
     public void calculateZValue(int layer, int wire) {
-        circuitValues[layer][wire] = wa ^ (e && circuitValues[--layer][wire]) ^ (d && circuitValues[--layer][++wire]) ^ (e && d);
+        circuitValues[layer][wire] = wa ^ (e & circuitValues[--layer][wire]) ^ (d & circuitValues[--layer][++wire]) ^ (e & d);
     }
 
     public void calculateOutput(boolean bobsOutput) {

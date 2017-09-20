@@ -57,7 +57,7 @@ public class Utility {
     public static boolean ANDgate(boolean... xs){
         boolean result = true;
         for (boolean x : xs) {
-            result = result && x;
+            result = result & x;
         }
         return result;
     }
