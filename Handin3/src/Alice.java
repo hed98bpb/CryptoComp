@@ -7,6 +7,7 @@ public class Alice {
 
     private Bloodtype b;
     public SecureRandom rand = new SecureRandom();
+    private int layers, wires;
 
     public Boolean output;
 
@@ -15,6 +16,8 @@ public class Alice {
     private boolean[][] circuitValues;
 
     public Alice(int layers, int wires, Bloodtype bloodtype){
+        this.layers = layers;
+        this.wires = wires;
         b = bloodtype;
         circuitValues = new boolean[layers][wires];
     }
@@ -104,6 +107,6 @@ public class Alice {
     }
 
     public void calculateOutput(boolean bobsOutput) {
-        output = circuitValues[5][0] ^ bobsOutput;
+        output = circuitValues[--layers][0] ^ bobsOutput;
     }
 }

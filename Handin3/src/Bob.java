@@ -7,6 +7,7 @@ public class Bob {
 
     private Bloodtype b;
     public SecureRandom rand = new SecureRandom();
+    private int layers, wires;
 
     private boolean ub, vb, wb, d, da, db, e, ea, eb;
     private boolean[] xas;
@@ -14,6 +15,8 @@ public class Bob {
 
     public Bob(int layers, int wires, Bloodtype bloodtype){
         b = bloodtype;
+        this.layers = layers;
+        this.wires = wires;
         circuitValues = new boolean[layers][wires];
     }
 
@@ -94,7 +97,7 @@ public class Bob {
     }
 
     public boolean sendOutput() {
-        return circuitValues[5][0];
+        return circuitValues[--layers][0];
     }
 
     public void calculateZValue(int layer, int wire) {

@@ -121,7 +121,7 @@ public class Utility {
         else throw new Error("No output was computed");
     }
 
-    private static void removeSpaceInLayer2(Alice alice, Bob bob, int layer) {
+    public static void removeSpaceInLayer2(Alice alice, Bob bob, int layer) {
         alice.identity(layer, 2, 1);
         bob.identity(layer, 2, 1);
         alice.identity(layer, 4, 2);
@@ -129,7 +129,7 @@ public class Utility {
     }
 
 
-    private static void and(Alice alice, Bob bob, Dealer dealer, int layer, int wire) {
+    public static void and(Alice alice, Bob bob, Dealer dealer, int layer, int wire) {
 
         boolean[] sixtuplet;
         sixtuplet = dealer.generateuvwSixtuplet();
