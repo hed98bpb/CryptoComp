@@ -1,30 +1,33 @@
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 
 public class Utility {
 
-    public Utility(){}
+    public Utility() {
+    }
 
-    public boolean tableLookup(Bloodtype donor, Bloodtype recipient){
+    public boolean tableLookup(Bloodtype donor, Bloodtype recipient) {
         return listCompatibility(donor).contains(recipient);
     }
 
-    public boolean booleanFormula(Bloodtype donor, Bloodtype recipient){
+    public boolean booleanFormula(Bloodtype donor, Bloodtype recipient) {
         LayoutConfig lc = new LayoutConfig(donor, recipient);
         return booleanCircuit(lc);
     }
 
     private boolean booleanCircuit(LayoutConfig lc) {
 
-        return ANDgate(ORgate(lc.cbar,lc.f),ORgate(lc.bbar,lc.e),ORgate(lc.abar,lc.d));
+        return ANDgate(ORgate(lc.cbar, lc.f), ORgate(lc.bbar, lc.e), ORgate(lc.abar, lc.d));
 
     }
 
-    public Testpair InputToBloodtypeEnums(String arg0, String arg1){
+    public Testpair InputToBloodtypeEnums(String arg0, String arg1) {
         return new Testpair(convertToBloodtype(arg0), convertToBloodtype(arg1));
     }
 
-    public Bloodtype convertToBloodtype(String arg){
+    public Bloodtype convertToBloodtype(String arg) {
         if (arg.equals(Bloodtype.ZERONEGATIVE.name)) return Bloodtype.ZERONEGATIVE;
         if (arg.equals(Bloodtype.ZEROPOSITIVE.name)) return Bloodtype.ZEROPOSITIVE;
         if (arg.equals(Bloodtype.ANEGATIVE.name)) return Bloodtype.ANEGATIVE;
@@ -35,18 +38,22 @@ public class Utility {
         return Bloodtype.ABPOSITIVE;
     }
 
-    public List<Bloodtype> listCompatibility(Bloodtype type){
-        if (type.equals(Bloodtype.ZERONEGATIVE)) return Arrays.asList(Bloodtype.ZEROPOSITIVE, Bloodtype.ZEROPOSITIVE, Bloodtype.ABNEGATIVE, Bloodtype.APOSITIVE, Bloodtype.BNEGATIVE, Bloodtype.BPOSITIVE, Bloodtype.ABNEGATIVE, Bloodtype.ABPOSITIVE);
-        if (type.equals(Bloodtype.ZEROPOSITIVE)) return Arrays.asList(Bloodtype.ZEROPOSITIVE, Bloodtype.APOSITIVE, Bloodtype.BPOSITIVE, Bloodtype.ABPOSITIVE);
-        if (type.equals(Bloodtype.ANEGATIVE)) return Arrays.asList(Bloodtype.ABNEGATIVE, Bloodtype.APOSITIVE, Bloodtype.ABNEGATIVE, Bloodtype.ABPOSITIVE);
+    public List<Bloodtype> listCompatibility(Bloodtype type) {
+        if (type.equals(Bloodtype.ZERONEGATIVE))
+            return Arrays.asList(Bloodtype.ZEROPOSITIVE, Bloodtype.ZEROPOSITIVE, Bloodtype.ABNEGATIVE, Bloodtype.APOSITIVE, Bloodtype.BNEGATIVE, Bloodtype.BPOSITIVE, Bloodtype.ABNEGATIVE, Bloodtype.ABPOSITIVE);
+        if (type.equals(Bloodtype.ZEROPOSITIVE))
+            return Arrays.asList(Bloodtype.ZEROPOSITIVE, Bloodtype.APOSITIVE, Bloodtype.BPOSITIVE, Bloodtype.ABPOSITIVE);
+        if (type.equals(Bloodtype.ANEGATIVE))
+            return Arrays.asList(Bloodtype.ABNEGATIVE, Bloodtype.APOSITIVE, Bloodtype.ABNEGATIVE, Bloodtype.ABPOSITIVE);
         if (type.equals(Bloodtype.APOSITIVE)) return Arrays.asList(Bloodtype.APOSITIVE, Bloodtype.ABPOSITIVE);
-        if (type.equals(Bloodtype.BNEGATIVE)) return Arrays.asList(Bloodtype.BNEGATIVE, Bloodtype.BPOSITIVE, Bloodtype.ABNEGATIVE, Bloodtype.ABPOSITIVE);
+        if (type.equals(Bloodtype.BNEGATIVE))
+            return Arrays.asList(Bloodtype.BNEGATIVE, Bloodtype.BPOSITIVE, Bloodtype.ABNEGATIVE, Bloodtype.ABPOSITIVE);
         if (type.equals(Bloodtype.BPOSITIVE)) return Arrays.asList(Bloodtype.BPOSITIVE, Bloodtype.ABPOSITIVE);
         if (type.equals(Bloodtype.ABNEGATIVE)) return Arrays.asList(Bloodtype.ABNEGATIVE, Bloodtype.ABPOSITIVE);
         return Arrays.asList(Bloodtype.ABPOSITIVE);
     }
 
-    public static boolean ORgate(boolean... xs){
+    public static boolean ORgate(boolean... xs) {
         boolean result = false;
         for (boolean x : xs) {
             result = result || x;
@@ -54,7 +61,7 @@ public class Utility {
         return result;
     }
 
-    public static boolean ANDgate(boolean... xs){
+    public static boolean ANDgate(boolean... xs) {
         boolean result = true;
         for (boolean x : xs) {
             result = result & x;
@@ -87,12 +94,12 @@ public class Utility {
         }
         for (int i = 1; i < 6; i += 2) {
             alice.identity(layer, i);
-            bob.identity(layer,i);
+            bob.identity(layer, i);
         }
 
         // Layer 2
         layer++;
-        for (int i = 0; i < 6; i += 2){
+        for (int i = 0; i < 6; i += 2) {
             and(alice, bob, dealer, layer, i);
         }
         removeSpaceInLayer2(alice, bob, layer);
@@ -150,7 +157,7 @@ public class Utility {
         bob.calculateZValue(layer, wire);
     }
 
-    public static void initializeInputWires(Alice alice, Bob bob){
+    public static void initializeInputWires(Alice alice, Bob bob) {
 
         alice.initializeInputWires();
         bob.initializeInputWires();
@@ -165,8 +172,31 @@ public class Utility {
         Bob bob = new Bob(6, 6, doner);
         return runProtocol(alice, bob);
     }
-}
 
+    public BigInteger findSafePrime(int bitsize) {
+        // if bitsize = 1024 finding such a prime takes about 1 minute with and i7
+        // or with 2048 bits about 11 minutes
+        SecureRandom sec = new SecureRandom(SecureRandom.getSeed(256));
+        BigInteger p = BigInteger.probablePrime(bitsize, sec);
+        // check if (p-1)/2 is a prime, e.g p=2q+1
+        while (!p.subtract(BigInteger.ONE).shiftRight(1).isProbablePrime(100)) {
+            p = BigInteger.probablePrime(bitsize, sec);
+        }
+        return p;
+    }
+
+    public BigInteger getGenerator(BigInteger p, SecureRandom r) {
+        BigInteger q = p.subtract(BigInteger.ONE).shiftRight(1);
+        BigInteger G = new BigInteger(p.bitCount() - 1, r);
+        G = G.mod(p);
+        // make sure G^q mod p != 1 and G^2 mod p !=1, e.g. G is a generator and |G| = q
+        while (G.modPow(q, p).compareTo(BigInteger.ONE) == 0 || G.modPow(new BigInteger("2"), p).compareTo(BigInteger.ONE) == 0) {
+            G = new BigInteger(p.bitCount() - 1, r);
+            G = G.mod(p);
+        }
+        return G;
+    }
+}
 
 final class Testpair {
     private final Bloodtype donor;
