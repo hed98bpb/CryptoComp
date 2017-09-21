@@ -186,6 +186,7 @@ public class Utility {
     }
 
     public BigInteger getGenerator(BigInteger p, SecureRandom r) {
+        // assuming p is a safe prime of p=2q+1
         BigInteger q = p.subtract(BigInteger.ONE).shiftRight(1);
         BigInteger G = new BigInteger(p.bitCount() - 1, r);
         G = G.mod(p);
