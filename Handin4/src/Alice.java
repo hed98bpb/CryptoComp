@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.security.SecureRandom;
 
 /**
@@ -6,107 +7,71 @@ import java.security.SecureRandom;
 public class Alice {
 
     private Bloodtype b;
-    public SecureRandom rand = new SecureRandom();
-    private int layers, wires;
+    private Utility util = new Utility();
+    private BigInteger[] pks = new BigInteger[8];
+    private SecureRandom sec = new SecureRandom();
+    private BigInteger sk;
+    private BigInteger[][] EncryptedMessages = null;
+    private BigInteger G;
+    private BigInteger p;
+    private BigInteger q;
 
-    public Boolean output;
-
-    private boolean ua, va, wa, d, da, db, e, ea, eb;
-    private boolean[] xbs;
-    private boolean[][] circuitValues;
-
-    public Alice(int layers, int wires, Bloodtype bloodtype){
-        this.layers = layers;
-        this.wires = wires;
+    public Alice(Bloodtype bloodtype){
         b = bloodtype;
-        circuitValues = new boolean[layers][wires];
-    }
-
-    public void xor(int layer, int wire){
-        circuitValues[layer][wire] = circuitValues[--layer][wire] ^ circuitValues[--layer][++wire];
-    }
-
-    public void andWithConstant(int layer, int wire, boolean c){
-        circuitValues[layer][wire] = circuitValues[--layer][wire] ^ c;
-    }
-
-    public void not(int layer, int wire){
-        xorWithConstant(layer, wire, true);
-    }
-
-    private void xorWithConstant(int layer, int wire, boolean c) {
-        circuitValues[layer][wire] = circuitValues[--layer][wire] ^ c;
-    }
-
-    public boolean hasOutput(){
-        return output != null;
-    }
-
-    public boolean getRand() {
-        return rand.nextBoolean();
-    }
-
-    public void initializeInputWires() {
-        xbs = new boolean[3];
-
-        for (int i = 0; i < 3; i++){
-            xbs[i] = getRand();
+        SecureRandom sec = new SecureRandom();
+        p = util.findSafePrime(256);
+        q = p.subtract(BigInteger.ONE).shiftRight(1);
+        G = util.getGenerator(p, sec);
+        sk = q;
+        while(sk.compareTo(q) >= 0){
+            sk = new BigInteger(q.bitLength(), sec);
         }
-
-        circuitValues[0][1] = b.encoding.charAt(0) == 0 ? false ^ xbs[0] : true ^ xbs[0];
-        circuitValues[0][3] = b.encoding.charAt(1) == 0 ? false ^ xbs[1] : true ^ xbs[1];
-        circuitValues[0][5] = b.encoding.charAt(2) == 0 ? false ^ xbs[2] : true ^ xbs[2];
-
+    }
+    public void setupPks(){
+        //Fill arrays with OGen
+        for(int i = 0; i<pks.length; i++){
+            BigInteger k = p;
+            while(k.compareTo(p) >= 0){
+                k = new BigInteger(p.bitLength(), sec);
+            }
+            pks[i] = k.modPow(new BigInteger("2"), p);
+        }
+        //Overwrite insert real Gen on index corresponding to own bloodtype
+        pks[b.encodingToInt()] = G.modPow(sk, p);
     }
 
-    public void setInputWiresFromBob(boolean[] inputWiresFromBob) {
-        circuitValues[0][0] = inputWiresFromBob[0];
-        circuitValues[0][2] = inputWiresFromBob[1];
-        circuitValues[0][4] = inputWiresFromBob[2];
+    public void setEncryptedMessages(BigInteger[][] encryptedMessages) {
+        EncryptedMessages = encryptedMessages;
     }
 
-    public boolean[] sendSharesForInputWires() {
-        return xbs;
+    public BigInteger[] getPks() {
+        return pks;
     }
 
-    public void identity(int layer, int wire) {
-        circuitValues[layer][wire] = circuitValues[--layer][wire];
+    public BigInteger getP() {
+        return p;
     }
 
-    public void setTriple(boolean ua, boolean va, boolean wa) {
-        this.ua = ua;
-        this.va = va;
-        this.wa = wa;
+    public BigInteger getG() {
+        return G;
     }
 
-    public void identity(int layer, int fromWire, int toWire) {
-        circuitValues[layer][toWire] = circuitValues[--layer][fromWire];
+    public BigInteger getQ() {
+        return q;
     }
 
-    public void calculateDAndEShares(int layer, int wire) {
-        da = circuitValues[--layer][wire] ^ ua;
-        ea = circuitValues[--layer][++wire] ^ va;
-    }
-
-    public void setDAndESharesFromBob(boolean[] bobsDAndE) {
-        this.db = bobsDAndE[0];
-        this.eb = bobsDAndE[1];
-    }
-
-    public boolean[] sendDAndEShares() {
-        return new boolean[] {da, ea};
-    }
-
-    public void calculateDAndEValues() {
-        d = da ^ db;
-        e = ea ^ eb;
-    }
-
-    public void calculateZValue(int layer, int wire) {
-        circuitValues[layer][wire] = wa ^ (e & circuitValues[--layer][wire]) ^ (d & circuitValues[--layer][++wire]) ^ (e & d);
-    }
-
-    public void calculateOutput(boolean bobsOutput) {
-        output = circuitValues[--layers][0] ^ bobsOutput;
+    public boolean calculateOutput() {
+        // if c2*c1^-sk == 416 aka. true
+        if(EncryptedMessages[b.encodingToInt()][0].modPow(p.subtract(BigInteger.ONE).subtract(sk), p).multiply(EncryptedMessages[b.encodingToInt()][1]).mod(p).compareTo(new BigInteger("416")) == 0){
+            return true;
+        } else if(EncryptedMessages[b.encodingToInt()][0].modPow(p.subtract(BigInteger.ONE).subtract(sk), p).multiply(EncryptedMessages[b.encodingToInt()][1]).mod(p).compareTo(new BigInteger("497")) == 0){
+            return false;
+        }
+        try {
+            throw new Exception("Sum ting wong, invalid truthtable mapping");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

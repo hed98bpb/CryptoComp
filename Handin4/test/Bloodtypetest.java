@@ -18,21 +18,6 @@ public class Bloodtypetest {
         return util.runProtocol(donor, recipient);
     }
 
-    private boolean andTest(Bloodtype donor, Bloodtype recipient){
-
-        Alice alice = new Alice(3,6, donor);
-        Bob bob = new Bob(3, 6, recipient);
-        Dealer dealer = new Dealer();
-
-        Utility util = new Utility();
-
-        util.initializeInputWires(alice, bob);
-        util.and(alice, bob, dealer, 2,2);
-
-        alice.calculateOutput(bob.sendOutput());
-
-        return alice.output;
-    }
 
 
     @Test
@@ -46,14 +31,6 @@ public class Bloodtypetest {
         System.out.println("G: "+g.toString()+" \n length: "+g.bitLength());
     }
 
-    @Test
-    public void checkAndGate() {
-        assertEquals(true, andTest(Bloodtype.ABPOSITIVE, Bloodtype.ABPOSITIVE));
-        assertEquals(false, andTest(Bloodtype.ABPOSITIVE, Bloodtype.BPOSITIVE));
-        assertEquals(false, andTest(Bloodtype.BPOSITIVE, Bloodtype.ABPOSITIVE));
-        assertEquals(false, andTest(Bloodtype.ZERONEGATIVE, Bloodtype.ZERONEGATIVE));
-
-    }
 
     @Test
     public void RecieverisOneg(){

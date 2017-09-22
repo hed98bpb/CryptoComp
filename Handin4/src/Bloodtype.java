@@ -17,14 +17,13 @@ public enum Bloodtype {
     }
 
     public int encodingToInt() {
-        //Has to be the reverse encoding for table lookups to be correct
-        if (encoding == "000") return 7;
-        if (encoding == "001") return 6;
-        if (encoding == "010") return 5;
-        if (encoding == "011") return 4;
-        if (encoding == "100") return 3;
-        if (encoding == "101") return 2;
-        if (encoding == "110") return 1;
-        return 0;
+        if (encoding == "000") return 0;
+        if (encoding == "001") return 1;
+        if (encoding == "010") return 4;
+        if (encoding == "011") return 5;
+        if (encoding == "100") return 2;
+        if (encoding == "101") return 3;
+        if (encoding == "110") return 6;
+        return 7;
     }
 }
