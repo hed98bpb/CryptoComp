@@ -5,7 +5,7 @@ import java.security.SecureRandom;
  */
 public class Dealer {
 
-    public SecureRandom rand = new SecureRandom(new byte[20]);
+    public SecureRandom rand = new SecureRandom(String.valueOf(System.currentTimeMillis()).getBytes());
 
     public Dealer() {
 
@@ -22,7 +22,7 @@ public class Dealer {
         boolean va = getRand();
         boolean vb = getRand();
         boolean wa = getRand();
-        boolean wb = ((ua ^ ub) & (va ^ vb)) ^ wa;
+        boolean wb = ((ua ^ ub) && (va ^ vb)) ^ wa;
 
         boolean[] triple = new boolean[6];
 

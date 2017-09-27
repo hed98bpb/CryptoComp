@@ -17,14 +17,20 @@ public class Bloodtypetest {
 
     private boolean andTest(Bloodtype donor, Bloodtype recipient){
 
-        Alice alice = new Alice(3,6, donor);
-        Bob bob = new Bob(3, 6, recipient);
+        Alice alice = new Alice(4,6, recipient);
+        Bob bob = new Bob(4, 6, donor);
         Dealer dealer = new Dealer();
 
         Utility util = new Utility();
 
         util.initializeInputWires(alice, bob);
-        util.and(alice, bob, dealer, 2,2);
+        alice.not(1,0);
+        alice.identity(1,1);
+        bob.not(1,0);
+        bob.identity(1,1);
+        util.and(alice, bob, dealer, 2,0);
+        alice.not(3,0);
+        bob.not(3,0);
 
         alice.calculateOutput(bob.sendOutput());
 
@@ -33,11 +39,11 @@ public class Bloodtypetest {
 
     @Test
     public void checkAndGate() {
-        assertEquals(true, andTest(Bloodtype.ABPOSITIVE, Bloodtype.ABPOSITIVE));
+        //Jeg ændrede andTesten til at kigge på første udtryk NOT( AND(NOT(rA),dA) )
         assertEquals(false, andTest(Bloodtype.ABPOSITIVE, Bloodtype.BPOSITIVE));
-        assertEquals(false, andTest(Bloodtype.BPOSITIVE, Bloodtype.ABPOSITIVE));
-        assertEquals(false, andTest(Bloodtype.ZERONEGATIVE, Bloodtype.ZERONEGATIVE));
-
+        assertEquals(true, andTest(Bloodtype.ABPOSITIVE, Bloodtype.ABPOSITIVE));
+        assertEquals(true, andTest(Bloodtype.BPOSITIVE, Bloodtype.ABPOSITIVE));
+        assertEquals(true, andTest(Bloodtype.ZERONEGATIVE, Bloodtype.ZERONEGATIVE));
     }
 
     @Test

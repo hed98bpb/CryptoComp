@@ -23,11 +23,11 @@ public class Alice {
     }
 
     public void xor(int layer, int wire){
-        circuitValues[layer][wire] = circuitValues[--layer][wire] ^ circuitValues[--layer][++wire];
+        circuitValues[layer][wire] = circuitValues[layer-1][wire] ^ circuitValues[layer-1][wire+1];
     }
 
     public void andWithConstant(int layer, int wire, boolean c){
-        circuitValues[layer][wire] = circuitValues[--layer][wire] ^ c;
+        circuitValues[layer][wire] = circuitValues[layer-1][wire] ^ c;
     }
 
     public void not(int layer, int wire){
@@ -35,7 +35,7 @@ public class Alice {
     }
 
     private void xorWithConstant(int layer, int wire, boolean c) {
-        circuitValues[layer][wire] = circuitValues[--layer][wire] ^ c;
+        circuitValues[layer][wire] = circuitValues[layer-1][wire] ^ c;
     }
 
     public boolean hasOutput(){
@@ -53,16 +53,16 @@ public class Alice {
             xbs[i] = getRand();
         }
 
-        circuitValues[0][1] = b.encoding.charAt(0) == 0 ? false ^ xbs[0] : true ^ xbs[0];
-        circuitValues[0][3] = b.encoding.charAt(1) == 0 ? false ^ xbs[1] : true ^ xbs[1];
-        circuitValues[0][5] = b.encoding.charAt(2) == 0 ? false ^ xbs[2] : true ^ xbs[2];
+        circuitValues[0][0] = b.encoding.charAt(0) == "0".charAt(0) ? false ^ xbs[0] : true ^ xbs[0];
+        circuitValues[0][2] = b.encoding.charAt(1) == "0".charAt(0) ? false ^ xbs[1] : true ^ xbs[1];
+        circuitValues[0][4] = b.encoding.charAt(2) == "0".charAt(0) ? false ^ xbs[2] : true ^ xbs[2];
 
     }
 
     public void setInputWiresFromBob(boolean[] inputWiresFromBob) {
-        circuitValues[0][0] = inputWiresFromBob[0];
-        circuitValues[0][2] = inputWiresFromBob[1];
-        circuitValues[0][4] = inputWiresFromBob[2];
+        circuitValues[0][1] = inputWiresFromBob[0];
+        circuitValues[0][3] = inputWiresFromBob[1];
+        circuitValues[0][5] = inputWiresFromBob[2];
     }
 
     public boolean[] sendSharesForInputWires() {
@@ -70,7 +70,7 @@ public class Alice {
     }
 
     public void identity(int layer, int wire) {
-        circuitValues[layer][wire] = circuitValues[--layer][wire];
+        circuitValues[layer][wire] = circuitValues[layer-1][wire];
     }
 
     public void setTriple(boolean ua, boolean va, boolean wa) {
@@ -80,12 +80,12 @@ public class Alice {
     }
 
     public void identity(int layer, int fromWire, int toWire) {
-        circuitValues[layer][toWire] = circuitValues[--layer][fromWire];
+        circuitValues[layer][toWire] = circuitValues[layer-1][fromWire];
     }
 
     public void calculateDAndEShares(int layer, int wire) {
-        da = circuitValues[--layer][wire] ^ ua;
-        ea = circuitValues[--layer][++wire] ^ va;
+        da = circuitValues[layer-1][wire] ^ ua;
+        ea = circuitValues[layer-1][wire+1] ^ va;
     }
 
     public void setDAndESharesFromBob(boolean[] bobsDAndE) {
@@ -103,10 +103,10 @@ public class Alice {
     }
 
     public void calculateZValue(int layer, int wire) {
-        circuitValues[layer][wire] = wa ^ (e & circuitValues[--layer][wire]) ^ (d & circuitValues[--layer][++wire]) ^ (e & d);
+        circuitValues[layer][wire] = wa ^ (e & circuitValues[layer-1][wire]) ^ (d & circuitValues[layer-1][wire+1]) ^ (e & d);
     }
 
     public void calculateOutput(boolean bobsOutput) {
-        output = circuitValues[--layers][0] ^ bobsOutput;
+        output = circuitValues[layers-1][0] ^ bobsOutput;
     }
 }
