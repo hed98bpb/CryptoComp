@@ -96,21 +96,29 @@ public class Utility {
             and(alice, bob, dealer, layer, i);
         }
 
-        // Layer 3
+        // Layer 3 (map the result and-gates to wire 0,1,2)
         layer++;
-        removeSpaceInLayer2(alice, bob, layer);
+        alice.identity(layer,0);
+        bob.identity(layer, 0);
+        alice.identity(layer,2,1);
+        bob.identity(layer, 2,1);
+        alice.identity(layer,4,2);
+        bob.identity(layer, 4,2);
+
+        // Layer 4
+        layer++;
         for (int i = 0; i < 3; i++) {
             alice.not(layer, i);
             bob.not(layer, i);
         }
 
-        // Layer 4
+        // Layer 5
         layer++;
         and(alice, bob, dealer, layer, 0);
         alice.identity(layer, 2, 1);
         bob.identity(layer, 2, 1);
 
-        // Layer 5
+        // Layer 6
         layer++;
         and(alice, bob, dealer, layer, 0);
 
@@ -119,13 +127,6 @@ public class Utility {
 
         if (alice.hasOutput()) return alice.output;
         else throw new Error("No output was computed");
-    }
-
-    public static void removeSpaceInLayer2(Alice alice, Bob bob, int layer) {
-        alice.identity(layer, 2, 1);
-        bob.identity(layer, 2, 1);
-        alice.identity(layer, 4, 2);
-        bob.identity(layer, 4, 2);
     }
 
 
@@ -161,8 +162,8 @@ public class Utility {
     }
 
     public Boolean runProtocol(Bloodtype doner, Bloodtype recipoient) {
-        Alice alice = new Alice(6, 6, recipoient);
-        Bob bob = new Bob(6, 6, doner);
+        Alice alice = new Alice(7, 6, recipoient);
+        Bob bob = new Bob(7, 6, doner);
         return runProtocol(alice, bob);
     }
 }
