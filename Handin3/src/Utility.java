@@ -95,10 +95,10 @@ public class Utility {
         for (int i = 0; i < 6; i += 2){
             and(alice, bob, dealer, layer, i);
         }
-        removeSpaceInLayer2(alice, bob, layer);
 
         // Layer 3
         layer++;
+        removeSpaceInLayer2(alice, bob, layer);
         for (int i = 0; i < 3; i++) {
             alice.not(layer, i);
             bob.not(layer, i);
@@ -107,8 +107,8 @@ public class Utility {
         // Layer 4
         layer++;
         and(alice, bob, dealer, layer, 0);
-        alice.identity(layer, 3, 2);
-        bob.identity(layer, 3, 2);
+        alice.identity(layer, 2, 1);
+        bob.identity(layer, 2, 1);
 
         // Layer 5
         layer++;

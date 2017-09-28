@@ -10,12 +10,22 @@ import static org.junit.Assert.*;
 public class Bloodtypetest {
 
     private Utility util = new Utility();
+    private boolean slave = true;
 
     private boolean test(Bloodtype donor, Bloodtype recipient){
-        return util.runProtocol(donor, recipient);
+        if (slave == false) {
+            return util.runProtocol(donor, recipient);
+        } else {
+            return testSlave(donor, recipient);
+        }
     }
 
-    private boolean andTest(Bloodtype donor, Bloodtype recipient){
+    private boolean testSlave(Bloodtype donor, Bloodtype recipient){
+        //Test each part of the logic and see if the truth table matches
+        return andTestpart1(donor,recipient) & andTestpart2(donor,recipient) & andTestpart3(donor,recipient);
+    }
+
+    private boolean andTestpart1(Bloodtype donor, Bloodtype recipient){
 
         Alice alice = new Alice(4,6, recipient);
         Bob bob = new Bob(4, 6, donor);
@@ -38,12 +48,82 @@ public class Bloodtypetest {
     }
 
     @Test
-    public void checkAndGate() {
+    public void checkAndGatepart1() {
         //Jeg ændrede andTesten til at kigge på første udtryk NOT( AND(NOT(rA),dA) )
-        assertEquals(false, andTest(Bloodtype.ABPOSITIVE, Bloodtype.BPOSITIVE));
-        assertEquals(true, andTest(Bloodtype.ABPOSITIVE, Bloodtype.ABPOSITIVE));
-        assertEquals(true, andTest(Bloodtype.BPOSITIVE, Bloodtype.ABPOSITIVE));
-        assertEquals(true, andTest(Bloodtype.ZERONEGATIVE, Bloodtype.ZERONEGATIVE));
+        assertEquals(false, andTestpart1(Bloodtype.ABPOSITIVE, Bloodtype.BPOSITIVE)); //111->011
+        assertEquals(true, andTestpart1(Bloodtype.ABPOSITIVE, Bloodtype.ABPOSITIVE)); //111->111
+        assertEquals(true, andTestpart1(Bloodtype.BPOSITIVE, Bloodtype.ABPOSITIVE)); //011->111
+        assertEquals(true, andTestpart1(Bloodtype.ZERONEGATIVE, Bloodtype.ZERONEGATIVE)); //000->000
+    }
+
+    private boolean andTestpart2(Bloodtype donor, Bloodtype recipient){
+
+        Alice alice = new Alice(5,6, recipient);
+        Bob bob = new Bob(5, 6, donor);
+        Dealer dealer = new Dealer();
+
+        Utility util = new Utility();
+
+        util.initializeInputWires(alice, bob);
+        alice.not(1,2);
+        alice.identity(1,3);
+        bob.not(1,2);
+        bob.identity(1,3);
+        util.and(alice, bob, dealer, 2,2);
+        alice.not(3,2);
+        bob.not(3,2);
+
+        //put output into first position
+        alice.identity(4,2,0);
+        bob.identity(4,2,0);
+
+        alice.calculateOutput(bob.sendOutput());
+
+        return alice.output;
+    }
+
+    @Test
+    public void checkAndGatepart2() {
+        //NOT( AND(NOT(rB),db) )
+        assertEquals(true, andTestpart2(Bloodtype.APOSITIVE, Bloodtype.BPOSITIVE)); //101 -> 011
+        assertEquals(false, andTestpart2(Bloodtype.ABPOSITIVE, Bloodtype.APOSITIVE)); //111 -> 101
+        assertEquals(true, andTestpart2(Bloodtype.BPOSITIVE, Bloodtype.ABPOSITIVE)); //011 -> 111
+        assertEquals(true, andTestpart2(Bloodtype.ZERONEGATIVE, Bloodtype.ZERONEGATIVE)); //000 -> 000
+    }
+
+    private boolean andTestpart3(Bloodtype donor, Bloodtype recipient){
+
+        Alice alice = new Alice(5,6, recipient);
+        Bob bob = new Bob(5, 6, donor);
+        Dealer dealer = new Dealer();
+
+        Utility util = new Utility();
+
+        util.initializeInputWires(alice, bob);
+        alice.not(1,4);
+        alice.identity(1,5);
+        bob.not(1,4);
+        bob.identity(1,5);
+        util.and(alice, bob, dealer, 2,4);
+        alice.not(3,4);
+        bob.not(3,4);
+
+        //put output into first position
+        alice.identity(4,4,0);
+        bob.identity(4,4,0);
+
+        alice.calculateOutput(bob.sendOutput());
+
+        return alice.output;
+    }
+
+    @Test
+    public void checkAndGatepart3() {
+        //NOT( AND(NOT(rR),dR) )
+        assertEquals(true, andTestpart3(Bloodtype.APOSITIVE, Bloodtype.BPOSITIVE)); //101 -> 011
+        assertEquals(true, andTestpart3(Bloodtype.ABNEGATIVE, Bloodtype.APOSITIVE)); //110 -> 101
+        assertEquals(false, andTestpart3(Bloodtype.BPOSITIVE, Bloodtype.ABNEGATIVE)); //011 -> 110
+        assertEquals(true, andTestpart3(Bloodtype.ZERONEGATIVE, Bloodtype.ZERONEGATIVE)); //000 -> 000
     }
 
     @Test
