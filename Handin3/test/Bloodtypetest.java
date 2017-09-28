@@ -22,7 +22,7 @@ public class Bloodtypetest {
 
     private boolean testSlave(Bloodtype donor, Bloodtype recipient){
         //Test each part of the logic and see if the truth table matches
-        return andTestpart1(donor,recipient) & andTestpart2(donor,recipient) & andTestpart3(donor,recipient);
+        return (andTestpart1(donor,recipient) & andTestpart2(donor,recipient) & andTestpart3(donor,recipient));
     }
 
     private boolean andTestpart1(Bloodtype donor, Bloodtype recipient){
