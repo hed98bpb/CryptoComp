@@ -1,0 +1,8 @@
+AB- : fejler ved test nr 7 (AB-, AB-)
+AB+ : fejler ved test nr 2 (0+, AB+)
+A-  : fejler ved test nr 3 (A-, A-)
+A+  : fejler ved test nr 3 (A-, A+)
+B-  : fejler ved test nr 3 (A-, B-)
+B+  : fejler ved test nr 7 (AB-, B+)
+0-  : fejler ikke 
+0+  : fejler ved test nr 5 (B-, 0+)
