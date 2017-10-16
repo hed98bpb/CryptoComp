@@ -29,6 +29,8 @@ public class Alice {
         randomGenerator = new Random();
 
         this.bloodtype = bloodtype;
+
+        // chosen from https://tools.ietf.org/html/rfc3526#section-3 to avoided generation time
         p = new BigInteger("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1" +
                                 "29024E088A67CC74020BBEA63B139B22514A08798E3404DD" +
                                 "EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245" +
@@ -55,7 +57,7 @@ public class Alice {
         BigInteger yi;
 
         for (Integer i : s) {
-            yi = p.multiply(qis.get(i)).add(ris.get(i).add(new BigInteger("2")));
+            yi = p.multiply(qis.get(i)).add(ris.get(i).multiply(new BigInteger("2")));
             yiSum = yiSum.add(yi);
         }
 
