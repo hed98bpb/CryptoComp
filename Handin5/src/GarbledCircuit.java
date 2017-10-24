@@ -9,11 +9,18 @@ public class GarbledCircuit {
     public ArrayList<Wire> enc;
 
     private Utility util = new Utility();
+    private ArrayList<GarbledGate> gates = new ArrayList<>();
 
     public GarbledCircuit(){
        wires = util.generateWireKeys(wires);
        d = wires.get(_NoOfWires_-1);
        enc = getEncoding();
+
+       makeFirstNotGates();
+       wires.set(7, wires.get(1));
+       wires.set(9, wires.get(3));
+       wires.set(11, wires.get(5));
+
     }
 
     public ArrayList<Wire> getEncoding(){
@@ -24,9 +31,10 @@ public class GarbledCircuit {
         return res;
     }
 
-    private ArrayList<GarbledGate> MakeFirstNotGates(){
-
-        return null;
+    private void makeFirstNotGates(){
+        gates.add(new GarbledGate(wires.get(0),wires.get(6)));
+        gates.add(new GarbledGate(wires.get(2),wires.get(8)));
+        gates.add(new GarbledGate(wires.get(4),wires.get(10)));
     }
 
 }
