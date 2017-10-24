@@ -3,6 +3,7 @@ import org.junit.Test;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +18,6 @@ public class Bloodtypetest {
     private boolean test(Bloodtype donor, Bloodtype recipient){
         return util.runProtocol(donor, recipient);
     }
-
 
 
     @Test

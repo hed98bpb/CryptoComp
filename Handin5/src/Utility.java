@@ -1,5 +1,6 @@
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -115,6 +116,22 @@ public class Utility {
             G = G.mod(p);
         }
         return G;
+    }
+
+    public ArrayList<Wire> generateWireKeys(ArrayList<Wire> wires) {
+           SecureRandom rand = new SecureRandom(SecureRandom.getSeed(256));
+            for(int j = 0; j< GarbledCircuit._NoOfWires_; j++){
+                String k0 = "";
+                for (int i = 0; i < 128; i++) {
+                    k0 = k0 + rand.nextInt(2);
+                }
+                String k1 = "";
+                for (int i = 0; i < 128; i++) {
+                    k1 = k1 + rand.nextInt(2);
+                }
+                wires.add(new Wire(k0,k1));
+            }
+            return wires;
     }
 }
 
