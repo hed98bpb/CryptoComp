@@ -19,6 +19,12 @@ public class Bloodtypetest {
         return util.runProtocol(donor, recipient);
     }
 
+    @Test
+    public void checkZeros(){
+        GarbledCircuit gb = new GarbledCircuit();
+        System.out.println(gb.getGates().get(0).evaluate(gb.wires.get(0).k(0)));
+
+    }
 
     @Test
     public void checkPrime(){

@@ -120,7 +120,7 @@ public class Utility {
 
     public ArrayList<Wire> generateWireKeys(ArrayList<Wire> wires) {
            SecureRandom rand = new SecureRandom(SecureRandom.getSeed(256));
-            for(int j = 0; j < GarbledCircuit._NoOfWires_; j++){
+            for(int j = 0; j <= GarbledCircuit._NoOfWires_; j++){
                 String k0 = "";
                 for (int i = 0; i < 128; i++) {
                     k0 = k0 + rand.nextInt(2);
