@@ -84,17 +84,10 @@ public class GarbledGate {
     public String evaluate(String input){
         String res="";
         String inputHashedBinary = toBinary(hash.digest(input.getBytes(StandardCharsets.UTF_8)));
-        if(input.length() > 128) {
-            //System.out.println("in:\n" + input + "\n");
-        }
         for (String c : Cs){
             res = "";
             res = xor(inputHashedBinary, c);
-            if(input.length() > 128) {
-                //System.out.println(res);
-            }
             if (res.substring(128,256).equals("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000")){
-                //System.out.println(res);
                 return res.substring(0,128);
             }
         }

@@ -18,22 +18,7 @@ public class Bloodtypetest {
     private boolean test(Bloodtype donor, Bloodtype recipient){
         return util.runProtocol(donor, recipient);
     }
-
-    @Test
-    public void checkZeros(){
-        GarbledCircuit gb = new GarbledCircuit();
-        System.out.println(gb.getGates().get(0).evaluate(gb.wires.get(0).k(0)));
-
-    }
-
-    @Test
-    public void checkEncoding(){
-        Alice alice = new Alice(Bloodtype.APOSITIVE);
-        alice.makeGarbledCurcuit();
-        System.out.println(alice.getGb().enc.get(1));
-        System.out.println(alice.makeEncodingX()[1]);
-    }
-
+    
 
     @Test
     public void RecieverisOneg(){

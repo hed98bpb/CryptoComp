@@ -20,12 +20,6 @@ public class Bob {
     }
 
     public void fakeOT(List<Wire> wires) {
-        System.out.println(wires.get(0)+"\n");
-        System.out.println(wires.get(1)+"\n");
-        System.out.println(wires.get(2)+"\n");
-        System.out.println(wires.get(3)+"\n");
-        System.out.println(wires.get(4)+"\n");
-        System.out.println(wires.get(5)+"\n");
         ArrayList<Wire> temp = new ArrayList<>();
         temp.add(wires.get(1));
         temp.add(wires.get(3));
@@ -39,8 +33,6 @@ public class Bob {
     }
 
     public void evaluateCircuit(ArrayList<GarbledGate> gates) {
-        System.out.println("X:\n"+X[0]+"\n"+X[1]+"\n"+X[2]);
-        System.out.println("Y:\n"+Y[0]+"\n"+Y[1]+"\n"+Y[2]);
         //Evaluate NOT-gates
         String w6 = gates.get(0).evaluate(X[0]);
         String w8 = gates.get(1).evaluate(X[1]);
@@ -56,12 +48,12 @@ public class Bob {
         String w16 = gates.get(7).evaluate(w13);
         String w17 = gates.get(8).evaluate(w14);
 
-        //Evaluate AND-gate and NOT-gate
+        //Evaluate AND-gate
         String w18 = gates.get(9).evaluate(w15+w16);
-        String w19 = gates.get(10).evaluate(w17);
+        String w19 = w17;
 
         //Evaluate final AND-gate
-        String w20 = gates.get(11).evaluate(w18+w19);
+        String w20 = gates.get(10).evaluate(w18+w19);
 
         //Set Z to the output of last gate
         Z=w20;

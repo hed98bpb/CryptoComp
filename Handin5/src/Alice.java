@@ -17,9 +17,6 @@ public class Alice {
 
 
     public boolean calculateOutput() throws Exception {
-        System.out.println("Z:\n"+Z+"\n");
-        System.out.println(gb.d.k(0));
-        System.out.println(gb.d.k(1));
         if(Z.equals(gb.d.k(1))){
             return true;
         }
