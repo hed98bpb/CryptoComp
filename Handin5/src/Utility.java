@@ -1,4 +1,3 @@
-import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,27 +8,6 @@ public class Utility {
     public Utility() {
     }
 
-    public Boolean runProtocol2(Alice alice, Bob bob) {
-        //Setup public keys
-        alice.setupPks();
-        //Send public keys and params
-        bob.setPks(alice.getPks());
-        bob.setG(alice.getG());
-        bob.setQ(alice.getQ()); // q is sent for convenience, as q can be calculated from p
-        bob.setP(alice.getP()); // alternatively p can be calculated from q as p is assumed to be safe prime of p=2q+1
-        // Get encrypted messages from bob
-        // True = 416 ^2 = 173056, False = 497 ^2 = 247009 <-- Mapping of messages to elements in the group
-        //System.out.println(new BigInteger("173056").modPow(alice.getQ(),alice.getP())+" - "+new BigInteger("247009").modPow(alice.getQ(),alice.getP()));
-        //Print above should print 1 - 1
-        alice.setEncryptedMessages(bob.getEncryptedMessages());
-        // output by decrypting
-        try {
-            return alice.calculateOutput();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     public Boolean runProtocol(Alice alice, Bob bob) {
         alice.makeGarbledCurcuit();
@@ -43,6 +21,22 @@ public class Utility {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public ArrayList<Wire> generateWireKeys(ArrayList<Wire> wires) {
+        SecureRandom rand = new SecureRandom(SecureRandom.getSeed(256));
+        for(int j = 0; j < GarbledCircuit._NoOfWires_; j++){
+            String k0 = "";
+            for (int i = 0; i < 128; i++) {
+                k0 = k0 + rand.nextInt(2);
+            }
+            String k1 = "";
+            for (int i = 0; i < 128; i++) {
+                k1 = k1 + rand.nextInt(2);
+            }
+            wires.add(new Wire(k0,k1));
+        }
+        return wires;
     }
 
     public boolean tableLookup(Bloodtype donor, Bloodtype recipient) {
@@ -110,47 +104,6 @@ public class Utility {
         Alice alice = new Alice(recipoient);
         Bob bob = new Bob(doner);
         return runProtocol(alice, bob);
-    }
-
-    public BigInteger findSafePrime(int bitsize) {
-        // if bitsize = 1024 finding such a prime takes about 1 minute with and i7
-        // or with 2048 bits about 11 minutes
-        SecureRandom sec = new SecureRandom(SecureRandom.getSeed(256));
-        BigInteger p = BigInteger.probablePrime(bitsize, sec);
-        // check if (p-1)/2 is a prime, e.g p=2q+1
-        while (!p.subtract(BigInteger.ONE).shiftRight(1).isProbablePrime(100)) {
-            p = BigInteger.probablePrime(bitsize, sec);
-        }
-        return p;
-    }
-
-    public BigInteger getGenerator(BigInteger p, SecureRandom r) {
-        // assuming p is a safe prime of p=2q+1
-        BigInteger q = p.subtract(BigInteger.ONE).shiftRight(1);
-        BigInteger G = new BigInteger(p.bitCount() - 1, r);
-        G = G.mod(p);
-        // make sure G^q mod p != 1 and G^2 mod p !=1, e.g. G is a generator and |G| = q
-        while (G.modPow(q, p).compareTo(BigInteger.ONE) == 0 || G.modPow(new BigInteger("2"), p).compareTo(BigInteger.ONE) == 0) {
-            G = new BigInteger(p.bitCount() - 1, r);
-            G = G.mod(p);
-        }
-        return G;
-    }
-
-    public ArrayList<Wire> generateWireKeys(ArrayList<Wire> wires) {
-           SecureRandom rand = new SecureRandom(SecureRandom.getSeed(256));
-            for(int j = 0; j < GarbledCircuit._NoOfWires_; j++){
-                String k0 = "";
-                for (int i = 0; i < 128; i++) {
-                    k0 = k0 + rand.nextInt(2);
-                }
-                String k1 = "";
-                for (int i = 0; i < 128; i++) {
-                    k1 = k1 + rand.nextInt(2);
-                }
-                wires.add(new Wire(k0,k1));
-            }
-            return wires;
     }
 }
 

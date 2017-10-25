@@ -34,17 +34,6 @@ public class Bloodtypetest {
         System.out.println(alice.makeEncodingX()[1]);
     }
 
-    @Test
-    public void checkPrime(){
-        BigInteger p = util.findSafePrime(256); //128 bit is fine for testing, NIST recommends 2048 bit p in practice
-        BigInteger q = p.subtract(BigInteger.ONE).shiftRight(1); // check if (p-1)/2 is a prime, e.g p=2q+1
-        assertTrue(q.isProbablePrime(1000)); //certainty of 14 is required for 128 bit primes
-        System.out.println("p: "+p.toString()+" \n length: "+p.bitLength());
-        System.out.println("q: "+q.toString()+" \n length: "+q.bitLength());
-        BigInteger g = util.getGenerator(p, new SecureRandom());
-        System.out.println("G: "+g.toString()+" \n length: "+g.bitLength());
-    }
-
 
     @Test
     public void RecieverisOneg(){

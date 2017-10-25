@@ -17,13 +17,6 @@ public class Wire {
         }
     }
 
-    public void setK0(String k0) {
-        this.k0 = k0;
-    }
-
-    public void setK1(String k1) {
-        this.k1 = k1;
-    }
 
     @Override
     public String toString(){

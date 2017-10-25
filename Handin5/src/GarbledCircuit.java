@@ -46,7 +46,7 @@ public class GarbledCircuit {
     }
 
     private void makeThirdAndNotGates(){
-        gates.add(new GarbledGate(wires.get(15), wires.get(16), wires.get(18)));
+        gates.add(new GarbledGate(wires.get(15),wires.get(16), wires.get(18)));
         gates.add(new GarbledGate(wires.get(17),wires.get(19)));
     }
 
