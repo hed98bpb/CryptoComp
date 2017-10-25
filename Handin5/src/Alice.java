@@ -1,5 +1,6 @@
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 
 /**
  * Created by Root on 08-09-2017.
@@ -19,6 +20,8 @@ public class Alice {
     private GarbledCircuit gb;
 
     private String[] X = new String[3];
+    private String Z;
+
     public Alice(Bloodtype bloodtype){
         b = bloodtype;
         SecureRandom sec = new SecureRandom();
@@ -63,7 +66,7 @@ public class Alice {
         return q;
     }
 
-    public boolean calculateOutput() {
+    public boolean calculateOutput2() {
         // if c2*c1^-sk == 416 aka. true
         if(EncryptedMessages[b.encodingToInt()][0].modPow(p.subtract(BigInteger.ONE).subtract(sk), p).multiply(EncryptedMessages[b.encodingToInt()][1]).mod(p).compareTo(new BigInteger("173056")) == 0){
             return true;
@@ -78,6 +81,19 @@ public class Alice {
         return false;
     }
 
+    public boolean calculateOutput() throws Exception {
+        System.out.println("Z:\n"+Z+"\n");
+        System.out.println(gb.d.k(0));
+        System.out.println(gb.d.k(1));
+        if(Z.equals(gb.d.k(1))){
+            return true;
+        }
+        if(Z.equals(gb.d.k(0))){
+            return false;
+        }
+        throw new Exception("We dun goofed");
+    }
+
     public void makeGarbledCurcuit() {
         gb = new GarbledCircuit();
     }
@@ -87,12 +103,20 @@ public class Alice {
     }
 
     public String[] makeEncodingX() {
+        ArrayList<Wire> temp = new ArrayList<>();
+        temp.add(gb.enc.get(0));
+        temp.add(gb.enc.get(2));
+        temp.add(gb.enc.get(4));
         for (int i = 0; i<b.encoding.toCharArray().length; i++){
             if(Character.compare(b.encoding.toCharArray()[i], '1') == 0) {
-                X[i] = gb.enc.get(i).k(1);
+                X[i] = temp.get(i).k(1);
             } else
-                X[i] = gb.enc.get(i).k(0);
+                X[i] = temp.get(i).k(0);
         }
         return X;
+    }
+
+    public void receiveZ(String s) {
+        Z = s;
     }
 }

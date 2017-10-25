@@ -23,16 +23,26 @@ public class Utility {
         //Print above should print 1 - 1
         alice.setEncryptedMessages(bob.getEncryptedMessages());
         // output by decrypting
-        return alice.calculateOutput();
+        try {
+            return alice.calculateOutput();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public Boolean runProtocol(Alice alice, Bob bob) {
         alice.makeGarbledCurcuit();
         bob.receiveX(alice.makeEncodingX());
-        bob.fakeOT(alice.getGb().enc.subList(3,6)); //TODO: make real OT
-        bob.evaluateCurcuit(alice.getGb().getGates());
-
-        return alice.calculateOutput();
+        bob.fakeOT(alice.getGb().enc); //TODO: make real OT
+        bob.evaluateCircuit(alice.getGb().getGates());
+        alice.receiveZ(bob.sendZ());
+        try {
+            return alice.calculateOutput();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public boolean tableLookup(Bloodtype donor, Bloodtype recipient) {
@@ -129,7 +139,7 @@ public class Utility {
 
     public ArrayList<Wire> generateWireKeys(ArrayList<Wire> wires) {
            SecureRandom rand = new SecureRandom(SecureRandom.getSeed(256));
-            for(int j = 0; j <= GarbledCircuit._NoOfWires_; j++){
+            for(int j = 0; j < GarbledCircuit._NoOfWires_; j++){
                 String k0 = "";
                 for (int i = 0; i < 128; i++) {
                     k0 = k0 + rand.nextInt(2);

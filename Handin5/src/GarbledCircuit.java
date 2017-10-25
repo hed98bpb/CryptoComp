@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class GarbledCircuit {
     public static final int _NoInputWires_ = 6;
-    public static final int _NoOfWires_ = 20;
+    public static final int _NoOfWires_ = 21;
 
     public ArrayList<Wire> wires = new ArrayList<>();
     public Wire d;
