@@ -1,5 +1,7 @@
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Root on 08-09-2017.
@@ -16,6 +18,9 @@ public class Bob {
     private BigInteger p;
 
     private BigInteger[] pks = new BigInteger[8];
+    private String[] X;
+    private String[] Y;
+
     public Bob(Bloodtype bloodtype){
         b = bloodtype;
         for(int i = 0; i<truthtable.length; i++){
@@ -61,4 +66,20 @@ public class Bob {
     }
 
 
+    public void receiveX(String[] strings) {
+        X = strings;
+    }
+
+    public void fakeOT(List<Wire> wires) {
+        for (int i = 0; i<b.encoding.toCharArray().length; i++){
+            if(Character.compare(b.encoding.toCharArray()[i], '1') == 0) {
+                Y[i] = wires.get(i).k(1);
+            } else
+                Y[i] = wires.get(i).k(0);
+        }
+    }
+
+    public void evaluateCurcuit(ArrayList<GarbledGate> gates) {
+        
+    }
 }

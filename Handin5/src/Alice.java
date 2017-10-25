@@ -16,6 +16,9 @@ public class Alice {
     private BigInteger p;
     private BigInteger q;
 
+    private GarbledCircuit gb;
+
+    private String[] X = new String[3];
     public Alice(Bloodtype bloodtype){
         b = bloodtype;
         SecureRandom sec = new SecureRandom();
@@ -27,6 +30,7 @@ public class Alice {
             sk = new BigInteger(q.bitLength(), sec);
         }
     }
+
     public void setupPks(){
         //Fill arrays with OGen
         for(int i = 0; i<pks.length; i++){
@@ -39,7 +43,6 @@ public class Alice {
         //Overwrite insert real Gen on index corresponding to own bloodtype
         pks[b.encodingToInt()] = G.modPow(sk, p);
     }
-
     public void setEncryptedMessages(BigInteger[][] encryptedMessages) {
         EncryptedMessages = encryptedMessages;
     }
@@ -73,5 +76,23 @@ public class Alice {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void makeGarbledCurcuit() {
+        gb = new GarbledCircuit();
+    }
+
+    public GarbledCircuit getGb() {
+        return gb;
+    }
+
+    public String[] makeEncodingX() {
+        for (int i = 0; i<b.encoding.toCharArray().length; i++){
+            if(Character.compare(b.encoding.toCharArray()[i], '1') == 0) {
+                X[i] = gb.enc.get(i).k(1);
+            } else
+                X[i] = gb.enc.get(i).k(0);
+        }
+        return X;
     }
 }

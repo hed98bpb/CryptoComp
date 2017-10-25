@@ -24,4 +24,9 @@ public class Wire {
     public void setK1(String k1) {
         this.k1 = k1;
     }
+
+    @Override
+    public String toString(){
+        return "k0: "+k0+"\n"+"k1: "+k1;
+    }
 }

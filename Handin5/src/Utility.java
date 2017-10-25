@@ -9,7 +9,7 @@ public class Utility {
     public Utility() {
     }
 
-    public Boolean runProtocol(Alice alice, Bob bob) {
+    public Boolean runProtocol2(Alice alice, Bob bob) {
         //Setup public keys
         alice.setupPks();
         //Send public keys and params
@@ -23,6 +23,15 @@ public class Utility {
         //Print above should print 1 - 1
         alice.setEncryptedMessages(bob.getEncryptedMessages());
         // output by decrypting
+        return alice.calculateOutput();
+    }
+
+    public Boolean runProtocol(Alice alice, Bob bob) {
+        alice.makeGarbledCurcuit();
+        bob.receiveX(alice.makeEncodingX());
+        bob.fakeOT(alice.getGb().enc.subList(3,6)); //TODO: make real OT
+        bob.evaluateCurcuit(alice.getGb().getGates());
+
         return alice.calculateOutput();
     }
 

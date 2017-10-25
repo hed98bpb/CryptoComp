@@ -27,6 +27,14 @@ public class Bloodtypetest {
     }
 
     @Test
+    public void checkEncoding(){
+        Alice alice = new Alice(Bloodtype.APOSITIVE);
+        alice.makeGarbledCurcuit();
+        System.out.println(alice.getGb().enc.get(1));
+        System.out.println(alice.makeEncodingX()[1]);
+    }
+
+    @Test
     public void checkPrime(){
         BigInteger p = util.findSafePrime(256); //128 bit is fine for testing, NIST recommends 2048 bit p in practice
         BigInteger q = p.subtract(BigInteger.ONE).shiftRight(1); // check if (p-1)/2 is a prime, e.g p=2q+1
